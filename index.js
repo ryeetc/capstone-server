@@ -24,32 +24,32 @@ app.get("/", authorize, (req,res)=>{
     );
 })
 
-app.get("/:id", authorize, async (req,res)=>{
+app.get("/meds", authorize, async (req,res)=>{
   const meds = await knex
     .select("*")
     .from("user")
     .join("meds", "user.id", "meds.user_id")
-    .where("user.id", "=", req.params.id)
+    .where("user.id", "=", req.user_id)
     res.send(meds)
 })
 
-app.get("/:id/log", authorize, async (req,res)=>{
+app.get("/log", authorize, async (req,res)=>{
   const log = await knex
     .select("*")
     .from("user")
     .join("log", "user.id", "log.user_id")
-    .where("user.id", "=", req.params.id)
+    .where("user.id", "=", req.user_id)
     res.send(log)
 })
 
-app.post("/:id/add", authorize, async (req,res)=>{
+app.post("/add", authorize, async (req,res)=>{
   const addMed = await knex
     .select("*")
     .from("meds")
     .insert({
       med_name: req.body.name,
       amount: req.body.amount,
-      user_id: req.body.id,
+      user_id: req.user_id,
       dosage: req.body.dosage,
       interval: req.body.interval
 
@@ -57,12 +57,12 @@ app.post("/:id/add", authorize, async (req,res)=>{
     res.send("success")
 })
 
-app.post("/:id/:medid/log", authorize, async (req,res)=>{
+app.post("/log/post", authorize, async (req,res)=>{
   const addlog = await knex 
     .select("*")
     .from("log")
     .insert({
-      user_id: req.params.id,
+      user_id: req.user_id,
       med_id: req.params.medid,
       comment: req.body.comment,
       ifTaken: true
@@ -91,8 +91,9 @@ app.post("/login", async (req,res)=>{
     .then ((data)=>{
       let username = req.body.email
       let password = req.body.password
+      let user_id = data[0].id
       if (data[0].password === password) {
-        let token = jwt.sign({username:username}, process.env.SECRET)
+        let token = jwt.sign({user_id:user_id}, process.env.SECRET)
         res.json({token:token, data})
       } else {
         res.send("failure to autheticate")

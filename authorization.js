@@ -22,7 +22,7 @@ const authorize = (req, res, next) => {
             console.log(err)
             return res.status(403).json({error: "Invalid JWT"});
         }
-        req.username = decoded.username;
+        req.user_id = decoded.user_id;
         next();
     });
 }
