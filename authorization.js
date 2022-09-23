@@ -15,7 +15,7 @@ const authorize = (req, res, next) => {
     }
 
     const token = splitBearerTokenString[1];
-    console.log(token)
+    
 
     jwt.verify(token, process.env.SECRET, (err, decoded) => {
         if (err) {
@@ -23,7 +23,6 @@ const authorize = (req, res, next) => {
             return res.status(403).json({error: "Invalid JWT"});
         }
         req.username = decoded.username;
-        console.log(decoded)
         next();
     });
 }

@@ -49,7 +49,7 @@ app.post("/:id/add", authorize, async (req,res)=>{
     .insert({
       med_name: req.body.name,
       amount: req.body.amount,
-      user_id: req.params.id,
+      user_id: req.body.id,
       dosage: req.body.dosage,
       interval: req.body.interval
 
@@ -93,7 +93,7 @@ app.post("/login", async (req,res)=>{
       let password = req.body.password
       if (data[0].password === password) {
         let token = jwt.sign({username:username}, process.env.SECRET)
-        res.json({token:token})
+        res.json({token:token, data})
       } else {
         res.send("failure to autheticate")
       }
