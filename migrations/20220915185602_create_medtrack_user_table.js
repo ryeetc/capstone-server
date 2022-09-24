@@ -17,7 +17,7 @@ exports.up = function(knex) {
             table.string("med_name", 30).notNullable();
             table.integer("amount").unsigned().notNullable();
             table.string("dosage").notNullable();
-            table.string("interval").notNullable();
+            table.string("time_interval").notNullable();
             table
                 .foreign("user_id")
                 .references("id")

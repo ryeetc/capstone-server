@@ -51,7 +51,7 @@ app.post("/add", authorize, async (req,res)=>{
       amount: req.body.amount,
       user_id: req.user_id,
       dosage: req.body.dosage,
-      interval: req.body.interval
+      time_interval: req.body.time_interval
 
     })
     res.send("success")
@@ -63,7 +63,7 @@ app.post("/log/post", authorize, async (req,res)=>{
     .from("log")
     .insert({
       user_id: req.user_id,
-      med_id: req.params.medid,
+      med_id: req.body.medid,
       comment: req.body.comment,
       ifTaken: true
     })
