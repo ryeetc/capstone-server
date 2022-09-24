@@ -36,9 +36,9 @@ app.get("/meds", authorize, async (req,res)=>{
 app.get("/log", authorize, async (req,res)=>{
   const log = await knex
     .select("*")
-    .from("user")
-    .join("log", "user.id", "log.user_id")
-    .where("user.id", "=", req.user_id)
+    .from("log")
+    .join("meds", "meds.id", "log.med_id")
+    .where("log.user_id", "=", req.user_id)
     res.send(log)
 })
 
@@ -75,8 +75,8 @@ app.post("/register", async (req,res)=>{
     .select("*")
     .from("user")
     .insert({
-      first_name: req.body.firstName,
-      last_name: req.body.lastName,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
       password: req.body.password,
       email: req.body.email
     })
