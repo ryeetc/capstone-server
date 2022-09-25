@@ -31,7 +31,17 @@ app.patch("/edit/amt", authorize, async (req,res)=>{
     .from("meds")
     .where("meds.id", "=", req.headers.id)
 
+})
 
+app.patch("/edit", authorize, async (req,res)=>{
+  const edit = await knex
+    .from("meds")
+    .where("meds.id", "=", req.headers.id)
+    .update("amount", req.body.amount)
+    .update("med_name", req.body.med_name)
+    .update("dosage", req.body.dosage)
+    .update("time_interval", req.body.time_interval)
+    
 })
 
 app.delete("/delete/med", authorize, async (req, res) =>{
