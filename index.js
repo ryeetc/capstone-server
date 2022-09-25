@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken")
 require('dotenv').config()
-const authorize = require("./authorization.js")
+const authorize = require("./authorization.js");
+const { Knex } = require("knex");
 
 const port = process.env.PORT
 
@@ -22,6 +23,23 @@ app.get("/", authorize, (req,res)=>{
     .catch((err) =>
       res.send(err)
     );
+})
+
+app.patch("/edit/amt", authorize, async (req,res)=>{
+  const edit = await knex
+    .update("amount", req.body.amount)
+    .from("meds")
+    .where("meds.id", "=", req.headers.id)
+
+
+})
+
+app.delete("/delete/med", authorize, async (req, res) =>{
+  const del = await knex
+    .delete("*")
+    .from("meds")
+    .where("meds.id", "=", req.headers.id)
+    res.send("success")
 })
 
 app.get("/meds", authorize, async (req,res)=>{
