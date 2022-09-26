@@ -71,7 +71,9 @@ app.get("/log", authorize, async (req,res)=>{
 })
 
 app.post("/add", authorize, async (req,res)=>{
+  console.log(req.body.amount)
   const addMed = await knex
+    
     .select("*")
     .from("meds")
     .insert({
