@@ -9,7 +9,7 @@ exports.up = function(knex) {
             table.string("first_name").notNullable();
             table.string("last_name").notNullable();
             table.string("password").notNullable();
-            table.string("email").notNullable();
+            table.string("email").notNullable().unique();
         })
         .createTable("meds", function(table){
             table.increments("id");
@@ -17,7 +17,7 @@ exports.up = function(knex) {
             table.string("med_name", 30).notNullable();
             table.integer("amount").unsigned().notNullable();
             table.string("dosage").notNullable();
-            table.string("interval").notNullable();
+            table.string("time_interval").notNullable();
             table
                 .foreign("user_id")
                 .references("id")
@@ -29,6 +29,8 @@ exports.up = function(knex) {
             table.increments("id");
             table.integer("user_id").unsigned().notNullable();
             table.integer("med_id").unsigned().notNullable();
+            table.string("med_name", 30).notNullable();
+            table.string("dosage").notNullable();
             table.string("comment", 250);
             table.boolean("ifTaken").defaultTo(false)
             table.timestamp('date_taken').defaultTo(knex.fn.now());
@@ -38,12 +40,12 @@ exports.up = function(knex) {
                 .inTable("user")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
-            table
-                .foreign("med_id")
-                .references("id")
-                .inTable("meds")
-                .onUpdate("CASCADE")
-                .onDelete("CASCADE")
+            // table
+            //     .foreign("med_id")
+            //     .references("id")
+            //     .inTable("meds")
+            //     .onUpdate("NO ACTION")
+            //     .onDelete("NO ACTION")
         })
 };
 
