@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken")
 require('dotenv').config()
 const authorize = require("./authorization.js");
 const { Knex } = require("knex");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const port = process.env.PORT
 
@@ -71,9 +73,7 @@ app.get("/log", authorize, async (req,res)=>{
 })
 
 app.post("/add", authorize, async (req,res)=>{
-  console.log(req.body.amount)
-  const addMed = await knex
-    
+  try { await knex
     .select("*")
     .from("meds")
     .insert({
@@ -83,12 +83,16 @@ app.post("/add", authorize, async (req,res)=>{
       dosage: req.body.dosage,
       time_interval: req.body.time_interval
 
+
     })
     res.send("success")
+  } catch{
+    res.status(400).send("failed to add")
+  }
 })
 
 app.post("/log/post", authorize, async (req,res)=>{
-  const addlog = await knex 
+  try { await knex 
     .select("*")
     .from("log")
     .insert({
@@ -97,24 +101,34 @@ app.post("/log/post", authorize, async (req,res)=>{
       comment: req.body.comment,
       ifTaken: true
     })
+    res.send("success")} catch {
+      res.status(400).send("failed to log")
+    }
     
 })
 
 app.post("/register", async (req,res)=>{
-  const addUser = await knex
+  const myPlaintextPassword = req.body.password
+  bcrypt.hash(myPlaintextPassword, saltRounds)
+    .then (async function(hash) {
+     await knex
     .select("*")
     .from("user")
     .insert({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      password: req.body.password,
+      password: hash,
       email: req.body.email
+  });
+  res.send("success")
+    }) .catch ((error) =>{
+      res.status(400).send("failed to register")
     })
-    res.send("success")
+    
 })
 
 app.post("/login", async (req,res)=>{
-  const person = await knex
+  try { await knex
     .select("*")
     .from("user")
     .where("email", "=", req.body.email)
@@ -122,13 +136,15 @@ app.post("/login", async (req,res)=>{
       let username = req.body.email
       let password = req.body.password
       let user_id = data[0].id
-      if (data[0].password === password) {
+      if ((bcrypt.compareSync(password, data[0].password)) || (password === data[0].password)) {
         let token = jwt.sign({user_id:user_id}, process.env.SECRET)
         res.json({token:token, data})
       } else {
         res.send("failure to autheticate")
       }
-    })
+    })} catch (error) {
+      res.status(401).send("incorrect login information")
+    }
 })
 
 app.listen(port, () => {
