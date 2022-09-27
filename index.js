@@ -124,7 +124,7 @@ app.post("/register", async (req,res)=>{
   res.send("success")
     }) .catch ((error) =>{
       
-      res.status(400).send(error.response)
+      res.status(400).send(error.response, "fail")
     })
     
 })
