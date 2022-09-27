@@ -67,7 +67,6 @@ app.get("/log", authorize, async (req,res)=>{
   const log = await knex
     .select("*")
     .from("log")
-    .join("meds", "meds.id", "log.med_id")
     .where("log.user_id", "=", req.user_id)
     res.send(log)
 })
@@ -99,7 +98,9 @@ app.post("/log/post", authorize, async (req,res)=>{
       user_id: req.user_id,
       med_id: req.body.medid,
       comment: req.body.comment,
-      ifTaken: true
+      ifTaken: true,
+      med_name: req.body.med_name,
+      dosage: req.body.dosage
     })
     res.send("success")} catch {
       res.status(400).send("failed to log")
@@ -122,7 +123,8 @@ app.post("/register", async (req,res)=>{
   });
   res.send("success")
     }) .catch ((error) =>{
-      res.status(400).send("failed to register")
+      
+      res.status(400).send(error.response)
     })
     
 })
