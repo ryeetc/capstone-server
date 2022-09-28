@@ -15,25 +15,10 @@ const knex = require('knex')(require('./knexfile'));
 
 app.use(express.json())
 
-var corsOptions = {
-  origin: "*",
-  methods: [
-    "GET",
-    "POST"
-  ],
-  credentials: true,
-};
+app.use(cors());
 
-app.use(cors(corsOptions));
-
-app.get("/", authorize, (req,res)=>{
-  knex('user')
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) =>
-      res.send(err)
-    );
+app.get("/", (req,res)=>{
+  res.send("success")
 })
 
 app.patch("/edit/amt", authorize, async (req,res)=>{
