@@ -120,7 +120,7 @@ app.post("/register", async (req,res)=>{
 })
 
 app.post("/login", async (req,res)=>{
-   await knex
+   try { await knex
     .select("*")
     .from("user")
     .where("email", "=", req.body.email)
@@ -134,7 +134,9 @@ app.post("/login", async (req,res)=>{
       } else {
         res.send("failure to autheticate")
       }
-    })
+    })} catch {
+      console.log("error")
+    }
 })
 
 app.listen(port, () => {
