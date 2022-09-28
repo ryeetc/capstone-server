@@ -22,7 +22,7 @@ app.get("/", (req,res)=>{
 })
 
 app.patch("/edit/amt", authorize, async (req,res)=>{
-  const edit = await knex
+   await knex
     .update("amount", req.body.amount)
     .from("meds")
     .where("meds.id", "=", req.headers.id)
@@ -30,7 +30,7 @@ app.patch("/edit/amt", authorize, async (req,res)=>{
 })
 
 app.patch("/edit", authorize, async (req,res)=>{
-  const edit = await knex
+   await knex
     .from("meds")
     .where("meds.id", "=", req.headers.id)
     .update("amount", req.body.amount)
@@ -41,7 +41,7 @@ app.patch("/edit", authorize, async (req,res)=>{
 })
 
 app.delete("/delete/med", authorize, async (req, res) =>{
-  const del = await knex
+   await knex
     .delete("*")
     .from("meds")
     .where("meds.id", "=", req.headers.id)
@@ -66,7 +66,7 @@ app.get("/log", authorize, async (req,res)=>{
 })
 
 app.post("/add", authorize, async (req,res)=>{
-  try { await knex
+  await knex
     .select("*")
     .from("meds")
     .insert({
@@ -79,13 +79,11 @@ app.post("/add", authorize, async (req,res)=>{
 
     })
     res.send("success")
-  } catch{
-    res.status(400).send("failed to add")
-  }
+  
 })
 
 app.post("/log/post", authorize, async (req,res)=>{
-  try { await knex 
+  await knex 
     .select("*")
     .from("log")
     .insert({
@@ -96,9 +94,7 @@ app.post("/log/post", authorize, async (req,res)=>{
       med_name: req.body.med_name,
       dosage: req.body.dosage
     })
-    res.send("success")} catch {
-      res.status(400).send("failed to log")
-    }
+    res.send("success")
     
 })
 
@@ -116,12 +112,13 @@ app.post("/register", async (req,res)=>{
       email: req.body.email
   });
   res.send("success")
-    })
+    }) 
+
     
 })
 
 app.post("/login", async (req,res)=>{
-  try { await knex
+   await knex
     .select("*")
     .from("user")
     .where("email", "=", req.body.email)
@@ -135,9 +132,7 @@ app.post("/login", async (req,res)=>{
       } else {
         res.send("failure to autheticate")
       }
-    })} catch (error) {
-      res.status(401).send("incorrect login information")
-    }
+    })
 })
 
 app.listen(port, () => {
