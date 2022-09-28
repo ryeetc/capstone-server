@@ -102,7 +102,7 @@ app.post("/register", async (req,res)=>{
   const myPlaintextPassword = req.body.password
   bcrypt.hash(myPlaintextPassword, saltRounds)
     .then (async function(hash) {
-     await knex
+    try { await knex
     .select("*")
     .from("user")
     .insert({
@@ -110,10 +110,10 @@ app.post("/register", async (req,res)=>{
       last_name: req.body.last_name,
       password: hash,
       email: req.body.email
-  });
+  })} catch{
+    console.log("error")
+  }
   res.send("success")
-    }).catch ((error)=>{
-      console.log(error)
     })
 
     
