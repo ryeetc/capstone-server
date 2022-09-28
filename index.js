@@ -116,9 +116,6 @@ app.post("/register", async (req,res)=>{
       email: req.body.email
   });
   res.send("success")
-    }) .catch ((error) =>{
-      
-      res.status(400).send(error.response, "fail")
     })
     
 })
