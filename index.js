@@ -112,7 +112,9 @@ app.post("/register", async (req,res)=>{
       email: req.body.email
   });
   res.send("success")
-    }) 
+    }).catch ((error)=>{
+      console.log(error)
+    })
 
     
 })
