@@ -16,7 +16,7 @@ const knex = require('knex')(require('./knexfile'));
 app.use(express.json())
 
 var corsOptions = {
-  origin: "*",
+  origin: "http://localhost:3000",
   credentials: true,
 };
 
