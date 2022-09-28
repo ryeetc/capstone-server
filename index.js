@@ -15,7 +15,12 @@ const knex = require('knex')(require('./knexfile'));
 
 app.use(express.json())
 
-app.use(cors());
+var corsOptions = {
+  origin: "https://pilltrack.herokuapp.com",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.get("/", authorize, (req,res)=>{
   knex('user')
