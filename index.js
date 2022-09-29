@@ -110,8 +110,8 @@ app.post("/register", async (req,res)=>{
       last_name: req.body.last_name,
       password: hash,
       email: req.body.email
-  })} catch{
-    console.log("error")
+  })} catch (error) {
+    console.log(error)
   }
   res.send("success")
     })
@@ -125,6 +125,10 @@ app.post("/login", async (req,res)=>{
     .from("user")
     .where("email", "=", req.body.email)
     .then ((data)=>{
+      if (data === []) {
+        res.send("failure to login")
+        return
+      }
       let username = req.body.email
       let password = req.body.password
       let user_id = data[0].id
@@ -134,8 +138,8 @@ app.post("/login", async (req,res)=>{
       } else {
         res.send("failure to autheticate")
       }
-    })} catch {
-      console.log("error")
+    })} catch (error){
+      res.send(error)
     }
 })
 
